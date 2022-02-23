@@ -26,7 +26,7 @@
  *   This program uses its own parser.  libjpeg is *not* required.
  * 
  *   Compile with 64-bit file offset support if you're going to try this
- *   on huge M-JPEG files.
+ *   on huge M-JPEG files.  Define _FILE_OFFSET_BITS=64
  */
 
 #include <limits.h>
