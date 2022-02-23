@@ -29,6 +29,7 @@
  *   on huge M-JPEG files.
  */
 
+#include <limits.h>
 #include <stddef.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -42,6 +43,35 @@
  * JPEG marker definitions.
  */
 #define JPEG_TEM      (0x01)    /* Temporary for arithmetic coding */
+
+#define JPEG_SOF_0    (0xC0)    /* Start Of Frame, Type 0 */
+#define JPEG_SOF_1    (0xC1)    /* Start Of Frame, Type 1 */
+#define JPEG_SOF_2    (0xC2)    /* Start Of Frame, Type 2 */
+#define JPEG_SOF_3    (0xC3)    /* Start Of Frame, Type 3 */
+
+#define JPEG_SOF_5    (0xC5)    /* Start Of Frame, Type 5 */
+#define JPEG_SOF_6    (0xC6)    /* Start Of Frame, Type 6 */
+#define JPEG_SOF_7    (0xC7)    /* Start Of Frame, Type 7 */
+
+#define JPEG_SOF_9    (0xC9)    /* Start Of Frame, Type 9 */
+#define JPEG_SOF_10   (0xCA)    /* Start Of Frame, Type 10 */
+#define JPEG_SOF_11   (0xCB)    /* Start Of Frame, Type 11 */
+
+#define JPEG_SOF_13   (0xCD)    /* Start Of Frame, Type 13 */
+#define JPEG_SOF_14   (0xCE)    /* Start Of Frame, Type 14 */
+#define JPEG_SOF_15   (0xCF)    /* Start Of Frame, Type 15 */
+
+#define JPEG_DHT      (0xC4)    /* Define Huffman Table */
+#define JPEG_DAC      (0xCC)    /* Define Arithmetic Coding cond. */
+#define JPEG_DQT      (0xDB)    /* Define Quantization Tables */
+#define JPEG_DRI      (0xDD)    /* Define Restart Interval */
+#define JPEG_DHP      (0xDE)    /* Define Hierarchical Progression */
+#define JPEG_EXP      (0xDF)    /* Expand Reference Components */
+#define JPEG_COM      (0xFE)    /* Comment */
+
+#define JPEG_APP_MIN  (0xE0)    /* Application-specific data zero */
+#define JPEG_APP_MAX  (0xEF)    /* Application-specific data fifteen */
+
 #define JPEG_RST_MIN  (0xD0)    /* Restart Marker zero */
 #define JPEG_RST_MAX  (0xD7)    /* Restart Marker seven */
 #define JPEG_SOI      (0xD8)    /* Start Of Image */
@@ -52,6 +82,7 @@
 /* Function prototypes */
 static int jpeg_isStandAlone(int c);
 static int jpeg_isImmediate(int c);
+static void reportMarker(int c, int immed);
 
 /*
  * Return whether the given marker is a stand-alone JPEG marker.
@@ -130,6 +161,150 @@ static int jpeg_isImmediate(int c) {
 }
 
 /*
+ * Report a given marker.
+ * 
+ * c is the marker byte, which must be in range 0x00-0xFE.  immed is a
+ * flag indicating whether this is an immediate marker within compressed
+ * data, or whether this is a normal marker.
+ * 
+ * Parameters:
+ * 
+ *   c - the marker byte
+ * 
+ *   immed - non-zero if immediate marker within data, zero otherwise
+ */
+static void reportMarker(int c, int immed) {
+  
+  /* Check parameters */
+  if ((c < 0) || (c > 0xfe)) {
+    abort();
+  }
+  
+  /* Report either marker or immediate */
+  if (immed) {
+    printf("Immediate ");
+  } else {
+    printf("Marker ");
+  }
+  
+  /* Print the name of the marker if recognized, otherwise the value */
+  switch (c) {
+    
+    case JPEG_TEM:
+      printf("TEM");
+      break;
+    
+    case JPEG_SOF_0:
+      printf("SOF(0)");
+      break;
+    
+    case JPEG_SOF_1:
+      printf("SOF(1)");
+      break;
+    
+    case JPEG_SOF_2:
+      printf("SOF(2)");
+      break;
+    
+    case JPEG_SOF_3:
+      printf("SOF(3)");
+      break;
+    
+    case JPEG_SOF_5:
+      printf("SOF(5)");
+      break;
+    
+    case JPEG_SOF_6:
+      printf("SOF(6)");
+      break;
+    
+    case JPEG_SOF_7:
+      printf("SOF(7)");
+      break;
+    
+    case JPEG_SOF_9:
+      printf("SOF(9)");
+      break;
+    
+    case JPEG_SOF_10:
+      printf("SOF(10)");
+      break;
+    
+    case JPEG_SOF_11:
+      printf("SOF(11)");
+      break;
+    
+    case JPEG_SOF_13:
+      printf("SOF(13)");
+      break;
+    
+    case JPEG_SOF_14:
+      printf("SOF(14)");
+      break;
+    
+    case JPEG_SOF_15:
+      printf("SOF(15)");
+      break;
+    
+    case JPEG_DHT:
+      printf("DHT");
+      break;
+    
+    case JPEG_DAC:
+      printf("DAC");
+      break;
+    
+    case JPEG_DQT:
+      printf("DQT");
+      break;
+    
+    case JPEG_DRI:
+      printf("DRI");
+      break;
+    
+    case JPEG_DHP:
+      printf("DHP");
+      break;
+    
+    case JPEG_EXP:
+      printf("EXP");
+      break;
+    
+    case JPEG_COM:
+      printf("COM");
+      break;
+    
+    case JPEG_SOI:
+      printf("SOI");
+      break;
+    
+    case JPEG_EOI:
+      printf("EOI");
+      break;
+    
+    case JPEG_SOS:
+      printf("SOS");
+      break;
+    
+    case JPEG_DNL:
+      printf("DNL");
+      break;
+    
+    default:
+      if ((c >= JPEG_APP_MIN) && (c <= JPEG_APP_MAX)) {
+        printf("APP(%d)", (c - JPEG_APP_MIN));
+      } else if ((c >= JPEG_RST_MIN) && (c <= JPEG_RST_MAX)) {
+        printf("RST(%d)", (c - JPEG_RST_MIN));
+      } else {
+        printf("0x%02X\n", (unsigned int) c);
+      }
+  }
+  
+  /* Next line */
+  printf("\n");
+}
+
+/*
  * Program entrypoint.
  * 
  * See the documentation at the top of this source file for the details
@@ -158,6 +333,7 @@ int main(int argc, char *argv[]) {
   int status = 1;
   int eoi_read = 0;
   long mark_len = 0;
+  long frame_count = 0;
   FILE *fp = NULL;
   
   /* Check parameters */
@@ -244,9 +420,22 @@ int main(int argc, char *argv[]) {
       }
     }
     
+    /* If marker is SOI and this is not first frame, add a line break */
+    if (status && (c == JPEG_SOI) && (frame_count > 0)) {
+      printf("\n");
+    }
+    
     /* Report the marker we just read */
     if (status) {
-      printf("Marker 0x%02X\n", (unsigned int) c);
+      reportMarker(c, 0);
+    }
+    
+    /* If the marker is SOI, then increment frame count, watching for
+     * overflow */
+    if (status && (c == JPEG_SOI)) {
+      if (frame_count < LONG_MAX) {
+        frame_count++;
+      }
     }
     
     /* If this is not a stand-alone marker, read two bytes to get the
@@ -383,7 +572,7 @@ int main(int argc, char *argv[]) {
         if (status && (c2 != 0)) {
           if (jpeg_isImmediate(c2)) {
             /* Immediate -- report the immediate */
-            printf("Immediate 0x%02X\n", (unsigned int) c2);
+            reportMarker(c2, 1);
             
             /* Fail if DNL */
             if (c2 == JPEG_DNL) {
@@ -411,6 +600,16 @@ int main(int argc, char *argv[]) {
       } else {
         eoi_read = 0;
       }
+    }
+  }
+  
+  /* Report statistics */
+  if (status) {
+    printf("\n");
+    if (frame_count < LONG_MAX) {
+      printf("Number of images: %ld\n", frame_count);
+    } else {
+      printf("Number of images: (overflow!)\n");
     }
   }
   
