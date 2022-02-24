@@ -1,0 +1,39 @@
+body {
+  padding-bottom: 5em;
+  padding-top: 2.5em;
+  padding-left: 0.5em;
+  padding-right: 0.5em;
+  font-family: sans-serif;
+  background-color: WhiteSmoke;
+}
+
+h2 {
+  font-size: 120%;
+  font-weight: normal;
+  text-decoration: underline;
+}
+
+#pStatus {
+  color: palegreen;
+  background-color: black;
+  font-size: 150%;
+  font-family: monospace;
+  border: medium outset;
+  padding: 0.25em;
+}
+
+#divLoad {
+  margin-top: 2em;
+}
+
+#divLoadInternal {
+  padding: 0.5em;
+  background-color: white;
+  border: medium inset;
+}
+
+#divLoadInternal th {
+  font-weight: normal;
+  text-align: right;
+  padding-right: 1em;
+}

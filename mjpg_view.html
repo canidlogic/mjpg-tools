@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8"/>
+    <title>M-JPEG Viewer</title>
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0"/>
+    
+    <!-- Load the main style sheet -->
+    <link href="mjpg_view.css" rel="stylesheet"/>
+    
+    <!-- If JavaScript disabled, do not show the splash screen -->
+    <noscript>
+      <style>
+
+#divSplash {
+  display: None;
+}
+
+      </style>
+    </noscript>
+    
+    <!-- Load modules -->
+    <script defer src="mjpg_view.js"></script>
+    
+  </head>
+  <body>
+  
+    <!-- Screen displayed when JavaScript is disabled -->
+    <noscript>
+      <h1>M-JPEG Viewer</h1>
+      <p>This web app requires JavaScript to function!</p>
+    </noscript>
+    
+    <!-- Initial splash screen, except when JavaScript disabled -->
+    <div id="divSplash">
+      Loading web app...
+    </div>
+    
+    <!-- The main program window, shown after page is loaded -->
+    <div id="divMain" style="display: none;">
+      
+      <!-- Status display -->
+      <p id="pStatus">
+        &nbsp;
+      </p>
+      
+      <!-- "Load M-JPEG" control box -->
+      <div id="divLoad"><table id="divLoadInternal"><tr><td>
+        <h2>Load M-JPEG</h2>
+        <table>
+          <tr>
+            <th>Raw MJPG stream:</th>
+            <td><input type="file" name="filMJPG" id="filMJPG"/></td>
+          </tr>
+          <tr>
+            <th>MJPG index file:</th>
+            <td><input type="file" name="filIndex" id="filIndex"/></td>
+          </tr>
+        </table>
+        <p>
+          <input type="button" value="Load video"
+            onclick="mjv.loadMJPG()"/>
+          <input type="button" value="Close"
+            onclick="mjv.close()"/>
+        </p>
+      </td></tr></table></div>
+    </div>
+  </body>
+</html>
