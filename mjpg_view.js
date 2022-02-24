@@ -350,10 +350,13 @@
       fault(func_name, 200);
     }
     
-    // Clear any elements that are currently in the viewer DIV
-    while (eDIV.hasChildNodes()) {
-      eDIV.removeChild(eDIV.firstChild);
+    // If nothing in image viewer DIV, add an <img>
+    if (!eDIV.hasChildNodes()) {
+      eDIV.appendChild(document.createElement("img"));
     }
+    
+    // Get the <img> element, which is the child of the image viewer DIV
+    eIMG = eDIV.firstChild;
     
     // Unles m_pos is the special initial value of -1, begin by revoking
     // the current object URL
@@ -376,12 +379,8 @@
     m_url = URL.createObjectURL(
                   m_mjpg.slice(f_begin, f_end, "image/jpeg"));
     
-    // Create an <img> for the current frame
-    eIMG = document.createElement("img");
+    // Update the <img> src for the current frame
     eIMG.setAttribute("src", m_url);
-    
-    // Insert the <img> into the div
-    eDIV.appendChild(eIMG);
     
     // Update the scrub slider
     e = document.getElementById("rngScrub");
