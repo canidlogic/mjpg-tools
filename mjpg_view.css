@@ -13,6 +13,27 @@ h2 {
   text-decoration: underline;
 }
 
+#divImage {
+  text-align: center;
+}
+
+#divImage img {
+  max-width: 95%;
+}
+
+#divNav {
+  margin-top: 2em;
+  margin-bottom: 2em;
+  padding: 0.5em;
+  text-align: center;
+  background-color: white;
+  border: medium inset;
+}
+
+#rngScrub {
+  width: 95%;
+}
+
 #pStatus {
   color: palegreen;
   background-color: black;
@@ -32,8 +53,6 @@ h2 {
   border: medium inset;
 }
 
-#divLoadInternal th {
-  font-weight: normal;
-  text-align: right;
-  padding-right: 1em;
+#divLoad td {
+  max-width: 20em;
 }
