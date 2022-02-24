@@ -42,31 +42,41 @@
     <!-- The main program window, shown after page is loaded -->
     <div id="divMain" style="display: none;">
       
+      <!-- Image viewer DIV -->
+      <div id="divImage" style="display: none;"></div>
+      
+      <!-- Navigation DIV -->
+      <div id="divNav" style="display: none;">
+        Frame scrub:<br/>
+        <input
+            type="range"
+            id="rngScrub" name="rngScrub"
+            min="0" max="1" step="1"
+            value="0"
+            oninput="mjv.handleScrubbing()"
+            onchange="mjv.handleScrub()"/><br/>
+        <span id="spnScrubVal">0</span>
+      </div>
+      
       <!-- Status display -->
       <p id="pStatus">
         &nbsp;
       </p>
       
       <!-- "Load M-JPEG" control box -->
-      <div id="divLoad"><table id="divLoadInternal"><tr><td>
-        <h2>Load M-JPEG</h2>
-        <table>
+      <div id="divLoad">
+        <table id="divLoadInternal">
           <tr>
-            <th>Raw MJPG stream:</th>
-            <td><input type="file" name="filMJPG" id="filMJPG"/></td>
-          </tr>
-          <tr>
-            <th>MJPG index file:</th>
-            <td><input type="file" name="filIndex" id="filIndex"/></td>
+            <td
+                ondrop="mjv.handleDrop(event)"
+                ondragover="mjv.handleDrag(event)">
+              <h2>Load M-JPEG</h2>
+              <p>Drag and drop a raw M-JPEG stream file <i>and</i> an
+              M-JPEG index file here (both at the same time) to load</p>
+            </td>
           </tr>
         </table>
-        <p>
-          <input type="button" value="Load video"
-            onclick="mjv.loadMJPG()"/>
-          <input type="button" value="Close"
-            onclick="mjv.close()"/>
-        </p>
-      </td></tr></table></div>
+      </div>
     </div>
   </body>
 </html>
