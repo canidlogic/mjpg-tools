@@ -21,6 +21,12 @@ h2 {
   max-width: 95%;
 }
 
+#divPointTrack {
+  margin-top: 2em;
+  margin-bottom: 2em;
+  text-align: center;
+}
+
 #divNav {
   margin-top: 2em;
   margin-bottom: 2em;
