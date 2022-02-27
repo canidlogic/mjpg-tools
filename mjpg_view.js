@@ -320,7 +320,7 @@
   function updatePos(i) {
     
     var func_name = "updatePos";
-    var eDIV, eIMG, e, f_begin, f_end;
+    var eDIV, eIMG, eTrack, e, f_begin, f_end;
     
     // Check parameter
     if (typeof(i) !== "number") {
@@ -344,15 +344,41 @@
       return;
     }
     
+    // Get the point tracker DIV
+    eTrack = document.getElementById("divPointTrack");
+    if (eTrack == null) {
+      fault(func_name, 190);
+    }
+    
     // Get the image viewer DIV
     eDIV = document.getElementById("divImage");
     if (eDIV == null) {
       fault(func_name, 200);
     }
     
-    // If nothing in image viewer DIV, add an <img>
+    // If nothing in image viewer DIV, add an <img> and add an event
+    // handler that updates the point tracker whenever the frame is
+    // clicked
     if (!eDIV.hasChildNodes()) {
-      eDIV.appendChild(document.createElement("img"));
+      eIMG = document.createElement("img");
+      eIMG.onclick = function(ev) {
+        var img_x, img_y, clr;
+        
+        // Get position of image element in client space
+        clr = eIMG.getBoundingClientRect();
+        
+        // Compute click position relative to the bounding rect
+        img_x = ev.clientX - clr.left;
+        img_y = ev.clientY - clr.top;
+        
+        // Floor to integers
+        img_x = Math.floor(img_x);
+        img_y = Math.floor(img_y);
+        
+        // Update the tracking DIV
+        eTrack.innerHTML = "(" + img_x + ", " + img_y + ")";
+      };
+      eDIV.appendChild(eIMG);
     }
     
     // Get the <img> element, which is the child of the image viewer DIV
@@ -401,8 +427,10 @@
       e.max = 1;
     }
     
-    // Show image viewer and navigation boxes if not already displayed
+    // Show image viewer, point tracking, and navigation boxes if not
+    // already displayed
     appear("divImage");
+    appear("divPointTrack");
     appear("divNav");
     
     // Update status
@@ -436,8 +464,18 @@
       eDIV.removeChild(eDIV.firstChild);
     }
     
-    // Hide image viewer and navigation
+    // Get the point tracker DIV
+    eDIV = document.getElementById("divPointTrack");
+    if (eDIV == null) {
+      fault(func_name, 200);
+    }
+    
+    // Reset message in point tracker DIV
+    eDIV.innerHTML = "(Click frame to get coordinates)";
+    
+    // Hide image viewer, point tracker, and navigation
     dismiss("divImage");
+    dismiss("divPointTrack");
     dismiss("divNav");
     
     // If we are currently loaded, revoke the URL of the current frame
